@@ -35,12 +35,6 @@
 
     // outputs
     let output = "";
-    let currentOut = "";
-    // work out current holiday today
-    if (todayHoliday) {
-      currentOut = `Today is ${todayHoliday.title}`;
-    } else currentOut = "Sorry, no bank holiday today";
-
     for (const holiday of events) {
       //output all others
       const { title, date } = holiday;
