@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Bank holidays</title>
+    <style></style>
+  </head>
+  <body>
+    <h1>Bank holidays</h1>
+    <h3>Todays holiday</h3>
+    <div id="currentHoliday"></div>
+    <h3>Other holidays</h3>
+    <div id="bankHolidays"></div>
+  </body>
+</html>
+
+<script>
+  async function getHolidays() {
+    const thePromise = await fetch("https://www.gov.uk/bank-holidays.json");
+    const dataGiven = await thePromise.json();
+
+    const bankHoliday = document.getElementById("bankHolidays");
+    // get holiday data
+    const events = dataGiven["england-and-wales"].events;
+    // work out current holiday today
+    const today = new Date().toISOString().split("T")[0];
+    const currentHoliday = document.getElementById("currentHoliday");
+    const todayHoliday = events.find((e) => e.date === today);
+
+    currentHoliday.innerHTML = todayHoliday
+      ? `<p><b>Today is ${todayHoliday.title}</p></b>`
+      : `<p><b>Sorry, it's not a bank holiday today</p></b>`;
+
+    // outputs
+    let output = "";
+    let currentOut = "";
+    // work out current holiday today
+    if (todayHoliday) {
+      currentOut = `Today is ${todayHoliday.title}`;
+    } else currentOut = "Sorry, no bank holiday today";
+
+    for (const holiday of events) {
+      //output all others
+      const { title, date } = holiday;
+      const [year, month, day] = date.split("-");
+      output += `<p><b>Holiday:</b> ${title} <b>Date:</b> ${day}-${month}-${year}</p>`;
+    }
+    bankHoliday.innerHTML = output;
+  }
+  getHolidays();
+</script>
